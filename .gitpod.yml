@@ -1,0 +1,18 @@
+
+image:
+  file: .gitpod.dockerfile
+# Ports to expose on workspace startup (optional)
+ports:
+  - port: 80
+    onOpen: open-preview
+  - port: 3306
+    onOpen: ignore
+# Command to start on workspace startup (optional)
+tasks:
+  - name: MySQL
+    command: >
+        mysqld
+  - name: Apache
+    command: >
+        apachectl start;
+        multitail /var/log/apache2/error.log -I /var/log/apache2/access.log
