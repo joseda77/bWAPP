@@ -140,98 +140,40 @@ if(isset($_GET["title"]))
 
     $title = $_GET["title"];
 
-    $sql = "SELECT * FROM movies WHERE title LIKE '%" . sqli($title) . "%'";
+    try {
+        
+        $db = new PDO('mysql:host=localhost; dbname=bWAPP;',$username,$password);
+        $db->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+        $stmt = $db->prepare("SELECT * FROM movies WHERE title=?");
+        $stmt->execute(array($title));
+        while($recordset = $stmt->fetch(PDO::FETCH_ASSOC)){
+ 
+            echo '<tr height="30">';
 
-    $recordset = mysqli_query($link, $sql);
-
-    if(!$recordset)
-    {
-
-        // die("Error: " . mysql_error());
-
-?>
-
-        <tr height="50">
-
-            <td colspan="5" width="580"><?php die("Error: " . mysqli_error($link)); ?></td>
-            <!--
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            -->
-
-        </tr>
-<?php
-
-    }
-
-    if(mysqli_num_rows($recordset) != 0)
-    {
-
-        while($row = mysqli_fetch_array($recordset))         
-        {
-
-            // print_r($row);
-
-?>
-
-        <tr height="30">
-
-            <td><?php echo $row["title"]; ?></td>
-            <td align="center"><?php echo $row["release_year"]; ?></td>
-            <td><?php echo $row["main_character"]; ?></td>
-            <td align="center"><?php echo $row["genre"]; ?></td>
-            <td align="center"><a href="http://www.imdb.com/title/<?php echo $row["imdb"]; ?>" target="_blank">Link</a></td>
-
-        </tr>
-<?php
-
+                echo '<td>';
+                    echo $recordset["title"];
+                echo '</td>';
+                echo'<td align="center">';
+                    echo $recordset["release_year"]; 
+                echo'</td>';
+                echo '<td>';
+                    echo $recordset["main_character"];
+                echo '</td>';
+                echo '<td align="center">';
+                    echo $recordset["genre"];
+                echo '</td>';
+                echo '<td align="center">';
+                    echo $recordset["imdb"];
+                echo '</td>';
+            echo '</tr>';
         }
 
+        $stmt->closeCursor();
+
+    }catch (Exception $e){
+
+        die('Error: ' . $e->GetMessage());
     }
-
-    else
-    {
-
-?>
-
-        <tr height="30">
-
-            <td colspan="5" width="580">No movies were found!</td>
-            <!--
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            -->
-
-        </tr>
-<?php
-
-    }
-
-    mysqli_close($link);
-
-}
-
-else
-{
-
-?>
-
-        <tr height="30">
-
-            <td colspan="5" width="580"></td>
-            <!--
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            -->
-
-        </tr>
-<?php
 
 }
 
