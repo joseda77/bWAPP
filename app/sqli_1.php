@@ -20,7 +20,7 @@ include("security.php");
 include("security_level_check.php");
 include("selections.php");
 include("functions_external.php");
-include("connect.php");
+include("connect_i.php");
 
 function sqli($data)
 {
@@ -142,7 +142,7 @@ if(isset($_GET["title"]))
 
     $sql = "SELECT * FROM movies WHERE title LIKE '%" . sqli($title) . "%'";
 
-    $recordset = mysql_query($sql, $link);
+    $recordset = mysqli_query($link, $sql);
 
     if(!$recordset)
     {
@@ -153,7 +153,7 @@ if(isset($_GET["title"]))
 
         <tr height="50">
 
-            <td colspan="5" width="580"><?php die("Error: " . mysql_error()); ?></td>
+            <td colspan="5" width="580"><?php die("Error: " . mysqli_error($link)); ?></td>
             <!--
             <td></td>
             <td></td>
@@ -166,10 +166,10 @@ if(isset($_GET["title"]))
 
     }
 
-    if(mysql_num_rows($recordset) != 0)
+    if(mysqli_num_rows($recordset) != 0)
     {
 
-        while($row = mysql_fetch_array($recordset))         
+        while($row = mysqli_fetch_array($recordset))         
         {
 
             // print_r($row);
@@ -211,7 +211,7 @@ if(isset($_GET["title"]))
 
     }
 
-    mysql_close($link);
+    mysqli_close($link);
 
 }
 
